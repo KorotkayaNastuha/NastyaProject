@@ -1,17 +1,21 @@
 // import { StatusBar } from 'expo-status-bar';
 // import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
 import { } from "react-native";
-import RegistrationScreen from './screens/RegistrationScreen';
-import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from './screens/LoginScreen';
+
 import { NavigationContainer } from "@react-navigation/native";
+import { useRoute } from './router';
+
 // import {useFonts} from "expo-font";
 // import * as SplashScreen from 'expo-splash-screen';
 // import React, { useCallback } from "react";
 
-const AuthStack = createStackNavigator();
+
 // SplashScreen.preventAutoHideAsync();
+
+
 export default function App() {
+  const routing = useRoute(true);
   // const [fontsLoaded] = useFonts({
   //   'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
   // });
@@ -26,13 +30,7 @@ export default function App() {
   // }
 
   return (
-    <NavigationContainer>
-      <AuthStack.Navigator>
-        <AuthStack.Screen name="Register" component={RegistrationScreen}  />
-        <AuthStack.Screen name="Login" component={LoginScreen}/>
-      </AuthStack.Navigator>
-      
-    </NavigationContainer>
+    <NavigationContainer>{routing}</NavigationContainer>
   );
 }
 

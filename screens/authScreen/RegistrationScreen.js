@@ -11,34 +11,44 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 
 import {useFonts} from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useCallback } from "react";
 
+
 const initialState = {
+    login: "",
     email: "",
     password: "",
-    
-}
+  
+};
 SplashScreen.preventAutoHideAsync();
 
-export default function LoginScreen({navigation}) {
+export default function RegistrationScreen({navigation}) {
     console.log(Platform.OS);
+    
+  const [state, setState] = useState(initialState);
+  const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
+  //    const onRegister = () => {
+  //   Alert.alert("Credentials", `${state}`);
+  // };
 
-    const [state, setState] = useState(initialState);
-    const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
+
+
   const keyboardHide = () => {
     setIsShowKeyBoard(false);
     Keyboard.dismiss();
     console.log(state);
     setState(initialState);
   };
-
+  
+  
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -49,19 +59,31 @@ export default function LoginScreen({navigation}) {
   if (!fontsLoaded) {
     return null;
   }
-return (
+
+  return (
       <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container} onLayout={onLayoutRootView}>
-       
+        
         <ImageBackground
           style={styles.image}
-          source={require("../assets/images/PhotoBG.png")}
-        >
-           <KeyboardAvoidingView 
+          source={require("../../assets/images/PhotoBG.png")}
+          >
+          <KeyboardAvoidingView 
           behavior={Platform.OS == "android" ? "padding" : "height"}
-        >
-            <View style={{...styles.form, marginBottom: isShowKeyBoard ? 10: 100}}> 
-                    <Text style={styles.inputTitle}>Увійти</Text>
+        >  
+            <View style={{...styles.form, marginBottom: isShowKeyBoard ? 10: 40}}> 
+                    <Text style={styles.inputTitle}>Реєстрація</Text>
+                    <View >
+                <TextInput
+                  style={styles.input}          
+                  placeholder="Логін"
+                  value={state.login}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, login: value }))
+                  }
+                  onFocus={() => setIsShowKeyBoard(true)}
+                />
+              </View>
               <View style={{ marginTop: 16 }}>
                 <TextInput
                   style={styles.input}
@@ -90,25 +112,25 @@ return (
                 style={styles.btn}
                 onPress={keyboardHide}
               >
-                <Text style={styles.btnTitle}>Увійти</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("Register")}
-                        >
+                <Text style={styles.btnTitle} >Зареєструватись</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Login")}
+              >
             <Text style={{
               position: "absolute",
-              marginTop: 208,
-              left: 50,
-              // width: 188,
+              marginTop: 274,
+              left:94,
+              width: 188,
               // height: 19,
               fontSize: 16,
               fontFamily: "Roboto-Regular",
               color:"#1B4371",
-                        }}>Немає акаунта? Зареєструватись
-                        </Text>
-                       </TouchableOpacity> 
+              }}>Вже є акаунт? Увійти
+              </Text>
+              </TouchableOpacity>
                     </View>
-           </KeyboardAvoidingView>        
+         </KeyboardAvoidingView>          
           </ImageBackground>
         
       </View>
@@ -117,11 +139,12 @@ return (
 }
 const styles = StyleSheet.create({
   container: {
-      flex:1,
+    flex: 1,
+    backgroundColor:"#fff",
         // position: "absolute",
         // width: 375,
         height: 812,
-        // left: 0,
+        // left: "5%",
         top: 0,
     },
     image: {
@@ -142,7 +165,7 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 8,
         color: " #BDBDBD",
-        top: 100,
+        top: 160,
         backgroundColor: "#F6F6F6",
         width: 343,
         height: 50,
@@ -154,21 +177,24 @@ const styles = StyleSheet.create({
     form: {
         // position: "absolute",
         // width: 375,
-        height: 489,
+        height: 549,
         left: 0,
-        top: 180,
+        top: 160,
         backgroundColor: "#FFFFFF",
       borderRadius: 25,
-        // marginBottom: 100,
+      // marginBottom: 100,
       marginHorizontal: 16,
+      
+        
     },
     inputTitle: {
         position: "absolute",
-        fontFamily: "Roboto-Medium",
+      fontFamily: "Roboto-Medium",
+        // fontStyle: "normal",
         display:"flex",
         width: 184,
         height: 35,
-        top: 32,
+        top: 92,
         bottom: 33,
         left:96,
         fontSize: 30,
@@ -185,7 +211,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width:343,
     height: 51,
-    bottom: 179,
+    bottom: 113,
     justifyContent: "center",
     alignItems: "center",
     left: 16,
