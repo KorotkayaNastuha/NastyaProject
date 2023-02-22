@@ -11,44 +11,34 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
 } from "react-native";
 
 import {useFonts} from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useCallback } from "react";
 
-
 const initialState = {
-    login: "",
     email: "",
     password: "",
-  
-};
+    
+}
 SplashScreen.preventAutoHideAsync();
 
-export default function RegistrationScreen({navigation}) {
+export default function LoginScreen({navigation}) {
     console.log(Platform.OS);
-    
-  const [state, setState] = useState(initialState);
-  const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
-  //    const onRegister = () => {
-  //   Alert.alert("Credentials", `${state}`);
-  // };
 
-
-
+    const [state, setState] = useState(initialState);
+    const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
   const keyboardHide = () => {
     setIsShowKeyBoard(false);
     Keyboard.dismiss();
     console.log(state);
     setState(initialState);
   };
-  
-  
+
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -59,31 +49,19 @@ export default function RegistrationScreen({navigation}) {
   if (!fontsLoaded) {
     return null;
   }
-
-  return (
+return (
       <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.container} onLayout={onLayoutRootView}>
-        
+       
         <ImageBackground
           style={styles.image}
-          source={require("../assets/images/PhotoBG.png")}
-          >
-          <KeyboardAvoidingView 
+          source={require("../../assets/images/PhotoBG.png")}
+        >
+           <KeyboardAvoidingView 
           behavior={Platform.OS == "android" ? "padding" : "height"}
-        >  
-            <View style={{...styles.form, marginBottom: isShowKeyBoard ? 50: 100}}> 
-                    <Text style={styles.inputTitle}>Реєстрація</Text>
-                    <View >
-                <TextInput
-                  style={styles.input}          
-                  placeholder="Логін"
-                  value={state.login}
-                  onChangeText={(value) =>
-                    setState((prevState) => ({ ...prevState, login: value }))
-                  }
-                  onFocus={() => setIsShowKeyBoard(true)}
-                />
-              </View>
+        >
+            <View style={{...styles.form, marginBottom: isShowKeyBoard ? 10: 40}}> 
+                    <Text style={styles.inputTitle}>Увійти</Text>
               <View style={{ marginTop: 16 }}>
                 <TextInput
                   style={styles.input}
@@ -112,25 +90,25 @@ export default function RegistrationScreen({navigation}) {
                 style={styles.btn}
                 onPress={keyboardHide}
               >
-                <Text style={styles.btnTitle} >Зареєструватись</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Login")}
-              >
+                <Text style={styles.btnTitle}>Увійти</Text>
+                </TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => navigation.navigate("Register")}
+                >
             <Text style={{
               position: "absolute",
-              marginTop: 274,
-              left:94,
-              width: 188,
+              marginTop: 208,
+              left: 50,
+              // width: 188,
               // height: 19,
               fontSize: 16,
               fontFamily: "Roboto-Regular",
               color:"#1B4371",
-              }}>Вже є акаунт? Увійти
-              </Text>
-              </TouchableOpacity>
-                    </View>
-         </KeyboardAvoidingView>          
+              }}>Немає акаунта? Зареєструватись
+            </Text>
+            </TouchableOpacity> 
+            </View>
+           </KeyboardAvoidingView>        
           </ImageBackground>
         
       </View>
@@ -139,12 +117,11 @@ export default function RegistrationScreen({navigation}) {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor:"#fff",
+      flex:1,
         // position: "absolute",
         // width: 375,
         height: 812,
-        // left: "5%",
+        // left: 0,
         top: 0,
     },
     image: {
@@ -165,7 +142,7 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 8,
         color: " #BDBDBD",
-        top: 160,
+        top: 100,
         backgroundColor: "#F6F6F6",
         width: 343,
         height: 50,
@@ -177,24 +154,21 @@ const styles = StyleSheet.create({
     form: {
         // position: "absolute",
         // width: 375,
-        height: 549,
+        height: 489,
         left: 0,
-        top: 160,
+        top: 200,
         backgroundColor: "#FFFFFF",
       borderRadius: 25,
-      // marginBottom: 100,
+        // marginBottom: 100,
       marginHorizontal: 16,
-      
-        
     },
     inputTitle: {
         position: "absolute",
-      fontFamily: "Roboto-Medium",
-        // fontStyle: "normal",
+        fontFamily: "Roboto-Medium",
         display:"flex",
         width: 184,
         height: 35,
-        top: 92,
+        top: 32,
         bottom: 33,
         left:96,
         fontSize: 30,
@@ -211,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width:343,
     height: 51,
-    bottom: 113,
+    bottom: 179,
     justifyContent: "center",
     alignItems: "center",
     left: 16,
