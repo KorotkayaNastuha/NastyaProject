@@ -15,9 +15,15 @@ import LoginScreen from './screens/authScreen/LoginScreen';
 import PostsScreen from './screens/mainScreen/PostsScreen';
 import CreateScreen from './screens/mainScreen/CreateScreen';
 import ProfileScreen from './screens/mainScreen/ProfileScreen';
+import { useDispatch } from 'react-redux';
+import { authSignOutUser } from './redux/auth/authOperations';
 
 
 export const useRoute = (isAuth) => {
+  const dispatch = useDispatch();
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  }
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
@@ -32,20 +38,6 @@ export const useRoute = (isAuth) => {
         options={{
         tabBarIcon: ({ focused, color, size}) => (
           <Feather name="grid" size={24} color="black" />    
-        )
-      }}
-        name="Posts" component={PostsScreen} />
-      <Tab.Screen
-        options={{
-        tabBarIcon: ({ focused, color, size}) => (
-          <AntDesign name="pluscircle" size={30} color="#FF6C00"/>    
-        )
-      }}
-        name="Create" component={CreateScreen} />
-      <Tab.Screen
-         options={{
-        tabBarIcon: ({ focused, color, size}) => (
-          <AntDesign name="user" size={24} color="black" />    
           ),
           headerTitleAlign: "center",
           title: "Публікації",
@@ -54,19 +46,46 @@ export const useRoute = (isAuth) => {
           },
           headerTintColor: "#212121",
           headerTitleStyle: {
-            fontWeight: "500",
-            fontSize: 17,
+          fontWeight: "500",
+          fontSize: 17,
+          },
+      }}
+        name="Posts" component={PostsScreen} />
+      <Tab.Screen
+        options={{
+        tabBarIcon: ({ focused, color, size}) => (
+          <AntDesign name="pluscircle" size={30} color="#FF6C00"/>    
+          ),
+          headerTitleAlign: "center",
+          title: "Створити публікацію",
+          headerStyle: {
+          backgroundColor: "#FFFFFF",
+          },
+          headerTintColor: "#212121",
+          headerTitleStyle: {
+          fontWeight: "500",
+          fontSize: 17,
+          },
+      }}
+        name="Create" component={CreateScreen} />
+      <Tab.Screen
+         options={{
+        tabBarIcon: ({ focused, color, size}) => (
+          <AntDesign name="user" size={24} color="black" />    
+          ),
+          headerTitleAlign: "center",
+          title: "Профіль",
+          headerStyle: {
+          backgroundColor: "#FFFFFF",
+          },
+          headerTintColor: "#212121",
+          headerTitleStyle: {
+          fontWeight: "500",
+          fontSize: 17,
           },
           headerRight: () => (
-            // <Button
-            
-            //   onPress={() => alert("This is a button!")}
-            //   title="Press me"
-            //   color="#fff"
-            // />
-
             <Feather name="log-out" size={24} color="black"
-              style={ {right: 10}} />
+              style={{ right: 10 }} onPress={signOut} />
           ),
       }}
         name="Profile" component={ProfileScreen} />

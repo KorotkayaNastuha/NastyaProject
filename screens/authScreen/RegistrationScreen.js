@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Platform,
   View,
@@ -12,13 +12,18 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  Image,
 } from "react-native";
 
 import {useFonts} from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useCallback } from "react";
+import { authSignUpUser } from "../../redux/auth/authOperations";
 
+import { useDispatch } from "react-redux";
 
+import * as ImagePicker from 'expo-image-picker';
+import { EvilIcons } from '@expo/vector-icons';
 const initialState = {
     login: "",
     email: "",
@@ -32,20 +37,44 @@ export default function RegistrationScreen({navigation}) {
     
   const [state, setState] = useState(initialState);
   const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
+  const [image, setImage] = useState(null);
   //    const onRegister = () => {
   //   Alert.alert("Credentials", `${state}`);
   // };
 
+  const dispatch = useDispatch();
 
-
-  const keyboardHide = () => {
+  const handleSubmit = () => {
     setIsShowKeyBoard(false);
     Keyboard.dismiss();
-    console.log(state);
+    
+    dispatch(authSignUpUser(state));
     setState(initialState);
   };
+
   
-  
+
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+    setImage(result.assets[0].uri);
+      // setImage(result.assets[0].uri);
+    } else {
+      alert('You did not select any image.');
+    }
+    
+  };
+
+//  const ImageViewer = ({ placeholderImageSource, selectedImage }) => {
+//   const imageSource =
+//     selectedImage !== null ? { uri: selectedImage } : placeholderImageSource;
+
+//   return <Image source={imageSource} style={styles.image} />;
+// }
   const [fontsLoaded] = useFonts({
     "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
@@ -61,7 +90,7 @@ export default function RegistrationScreen({navigation}) {
   }
 
   return (
-      <TouchableWithoutFeedback onPress={keyboardHide}>
+      <TouchableWithoutFeedback onPress={handleSubmit}>
       <View style={styles.container} onLayout={onLayoutRootView}>
         
         <ImageBackground
@@ -70,10 +99,24 @@ export default function RegistrationScreen({navigation}) {
           >
           <KeyboardAvoidingView 
           behavior={Platform.OS == "android" ? "padding" : "height"}
-        >  
-            <View style={{...styles.form, marginBottom: isShowKeyBoard ? 10: 40}}> 
-                    <Text style={styles.inputTitle}>Реєстрація</Text>
-                    <View >
+          >  
+            
+      
+            <View style={{ ...styles.form, marginBottom: isShowKeyBoard ? 10 : 40 }}> 
+              
+              <View style={styles.photo} >
+                
+                <TouchableOpacity
+                  onPress={pickImageAsync}
+                >
+                {image && <Image source={{ uri: image }} style={{ width: "100%", height: "100%", borderRadius: 16 }} />}  
+                  <EvilIcons name="plus" size={34} color="#FF6C00" style={{ position: "absolute", left: 100, top: 81 }} />
+                
+                </TouchableOpacity>
+                  
+            </View>  
+                <Text style={styles.inputTitle}>Реєстрація</Text>
+            <View >
                 <TextInput
                   style={styles.input}          
                   placeholder="Логін"
@@ -110,7 +153,7 @@ export default function RegistrationScreen({navigation}) {
                 <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                onPress={keyboardHide}
+                onPress={handleSubmit}
               >
                 <Text style={styles.btnTitle} >Зареєструватись</Text>
               </TouchableOpacity>
@@ -146,7 +189,18 @@ const styles = StyleSheet.create({
         height: 812,
         // left: "5%",
         top: 0,
-    },
+  },
+  photo: {
+    position:"absolute",
+    borderWidth: 1,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+    borderColor: "#F6F6F6",
+    width: 120,
+    height: 120,
+    left: 128,
+    top: -60,
+  },
     image: {
         flex: 1,
         resizeMode: "cover",
@@ -170,7 +224,7 @@ const styles = StyleSheet.create({
         width: 343,
         height: 50,
         left: 16,
-     paddingLeft: 16,
+        paddingLeft: 16,
         fontFamily:"Roboto-Regular",
         
     },

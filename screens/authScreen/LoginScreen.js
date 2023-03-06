@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
 
 import {useFonts} from "expo-font";
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,12 +29,17 @@ SplashScreen.preventAutoHideAsync();
 export default function LoginScreen({navigation}) {
     console.log(Platform.OS);
 
-    const [state, setState] = useState(initialState);
-    const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
-  const keyboardHide = () => {
+  const [state, setState] = useState(initialState);
+  const [isShowKeyBoard, setIsShowKeyBoard] = useState(false);
+  
+  const dispatch = useDispatch();
+
+
+    const handleSubmit = () => {
     setIsShowKeyBoard(false);
     Keyboard.dismiss();
-    console.log(state);
+      
+    dispatch(authSignInUser(state));
     setState(initialState);
   };
 
@@ -50,7 +57,7 @@ export default function LoginScreen({navigation}) {
     return null;
   }
 return (
-      <TouchableWithoutFeedback onPress={keyboardHide}>
+      <TouchableWithoutFeedback onPress={handleSubmit}>
       <View style={styles.container} onLayout={onLayoutRootView}>
        
         <ImageBackground
@@ -88,7 +95,7 @@ return (
                 <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.btn}
-                onPress={keyboardHide}
+                onPress={handleSubmit}
               >
                 <Text style={styles.btnTitle}>Увійти</Text>
                 </TouchableOpacity>
